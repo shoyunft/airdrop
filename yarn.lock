@@ -1244,7 +1244,7 @@
     "@types/sinon-chai" "^3.2.3"
     "@types/web3" "1.0.19"
 
-"@openzeppelin/contracts@^4.3.2":
+"@openzeppelin/contracts@^4.1.0", "@openzeppelin/contracts@^4.3.2":
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.3.2.tgz#ff80affd6d352dbe1bbc5b4e1833c41afd6283b6"
   integrity sha512-AybF1cesONZStg5kWf6ao9OlqTZuPqddvprc0ky7lrUVOjXeKpmQ2Y9FK+6ygxasb+4aic4O5pneFBfwVsRRRg==
@@ -1353,6 +1353,13 @@
   dependencies:
     "@sentry/types" "5.30.0"
     tslib "^1.9.3"
+
+"@shoyunft/contracts@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@shoyunft/contracts/-/contracts-1.0.2.tgz#9feefefd4ccf6b334131e6eb6191e10bb2406813"
+  integrity sha512-sAFwXTJOZbRq/WX+PvOgXybaPl7z1QzLnEXRG3BSYITI/oAnyRNNWO2SJvxg7HhM+8nk6IdR/DcK4TGGl82bdg==
+  dependencies:
+    "@openzeppelin/contracts" "^4.1.0"
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
@@ -9824,6 +9831,11 @@ readdirp@~3.6.0:
   integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
+
+readline-sync@^1.4.10:
+  version "1.4.10"
+  resolved "https://registry.yarnpkg.com/readline-sync/-/readline-sync-1.4.10.tgz#41df7fbb4b6312d673011594145705bf56d8873b"
+  integrity sha512-gNva8/6UAe8QYepIQH/jQ2qn91Qj0B9sYjMBBs3QOB8F2CXcKgLxQaJRP76sWVRQt+QU+8fAkCbCvjjMFu7Ycw==
 
 rechoir@^0.6.2:
   version "0.6.2"

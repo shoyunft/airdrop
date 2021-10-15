@@ -115,7 +115,7 @@ const config: HardhatUserConfig = {
         eachLine: removeConsoleLog(bre => bre.network.name !== "hardhat" && bre.network.name !== "localhost"),
     },
     solidity: {
-        version: "0.8.9",
+        version: "0.8.3",
         settings: {
             optimizer: {
                 enabled: true,

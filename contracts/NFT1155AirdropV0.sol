@@ -1,34 +1,27 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity =0.8.9;
+pragma solidity =0.8.3;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/INFT1155.sol";
+import "@shoyunft/contracts/contracts/interfaces/INFT1155.sol";
+import "./MerkleProof.sol";
 
-contract NFT1155Airdrop is Ownable {
+contract NFT1155AirdropV0 is Ownable, MerkleProof {
     address public immutable nftContract;
-    mapping(uint256 => bool) public tokenIdEnabled;
-    mapping(uint256 => mapping(address => bool)) public canClaim;
+    mapping(uint256 => bytes32) public merkleRoots;
+    mapping(bytes32 => mapping(address => bool)) public claimed;
 
-    event Claim(uint256 indexed tokenId, address indexed account);
+    event AddMerkleRoot(bytes32 indexed merkleRoot, uint256 indexed tokenId);
+    event Claim(bytes32 indexed merkleRoot, uint256 indexed tokenId, address indexed account);
 
     constructor(
         address _nftContract,
-        uint256 tokenId,
-        address[] memory accounts
+        bytes32 merkleRoot,
+        uint256 tokenId
     ) {
         nftContract = _nftContract;
-        tokenIdEnabled[tokenId] = true;
-        for (uint256 i = 0; i < accounts.length; i++) {
-            canClaim[tokenId][accounts[i]] = true;
-        }
-    }
-
-    function enable(uint256 tokenId, address[] memory accounts) external onlyOwner {
-        require(!tokenIdEnabled[tokenId], "DUPLICATE_TOKEN_ID");
-
-        for (uint256 i = 0; i < accounts.length; i++) {
-            canClaim[tokenId][accounts[i]] = true;
+        if (merkleRoot != bytes32("")) {
+            merkleRoots[tokenId] = merkleRoot;
         }
     }
 
@@ -48,12 +41,33 @@ contract NFT1155Airdrop is Ownable {
         INFT1155(nftContract).setBaseURI(baseURI);
     }
 
-    function claim(uint256 tokenId) external {
-        require(canClaim[tokenId][msg.sender], "FORBIDDEN");
+    function mintBatch(
+        address to,
+        uint256[] calldata tokenIds,
+        uint256[] calldata amounts,
+        bytes calldata data
+    ) external onlyOwner {
+        INFT1155(nftContract).mintBatch(to, tokenIds, amounts, data);
+    }
 
+    function burnBatch(uint256[] calldata tokenIds, uint256[] calldata amounts) external onlyOwner {
+        INFT1155(nftContract).burnBatch(tokenIds, amounts);
+    }
+
+    function addMerkleRoot(bytes32 merkleRoot, uint256 tokenId) external onlyOwner {
+        require(merkleRoots[tokenId] == bytes32(""), "SHOYU: DUPLICATE_ROOT");
+        merkleRoots[tokenId] = merkleRoot;
+
+        emit AddMerkleRoot(merkleRoot, tokenId);
+    }
+
+    function claim(bytes32 merkleRoot, uint256 tokenId) external {
+        require(merkleRoots[tokenId] == merkleRoot, "SHOYU: INVALID_ROOT");
+        require(!claimed[merkleRoot][msg.sender], "SHOYU: FORBIDDEN");
+
+        claimed[merkleRoot][msg.sender] = true;
         INFT1155(nftContract).mint(msg.sender, tokenId, 1, "");
-        canClaim[tokenId][msg.sender] = false;
 
-        emit Claim(tokenId, msg.sender);
+        emit Claim(merkleRoot, tokenId, msg.sender);
     }
 }
