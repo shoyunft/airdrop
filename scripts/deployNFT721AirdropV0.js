@@ -1,14 +1,22 @@
 const { ethers } = require("hardhat");
 const readlineSync = require("readline-sync");
 
-module.exports = async () => {
-    const contract = readlineSync.prompt("Contract Address: ");
-    const merkleRoot = readlineSync.prompt("Merkle Root: ");
-    const toTokenId = readlineSync.prompt("To Token ID: ");
-    const NFT721Airdrop = ethers.getContractFactory("NFT721Airdrop");
+async function main() {
+    const contract = readlineSync.question("Contract Address: ");
+    const merkleRoot = readlineSync.question("Merkle Root: ");
+    const fromTokenId = readlineSync.question("From Token ID: ");
+    const length = readlineSync.question("Length: ");
 
-    const airdrop = await NFT721Airdrop.deploy(contract, merkleRoot, toTokenId);
+    const NFT721Airdrop = await ethers.getContractFactory("NFT721AirdropV0");
+    const airdrop = await NFT721Airdrop.deploy(contract, merkleRoot, fromTokenId, length);
     await airdrop.deployed();
 
     console.log("NFT721Airdrop deployed to:", airdrop.address);
-};
+}
+
+main()
+    .then(() => process.exit(0))
+    .catch(error => {
+        console.error(error);
+        process.exit(1);
+    });
