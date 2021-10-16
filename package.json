@@ -1,14 +1,19 @@
 {
-  "name": "@shoyunft/airdrop-contracts",
+  "name": "@shoyunft/airdrop",
   "version": "1.0.0",
   "description": "Contracts for airdropping shoyu NFTs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/sushiswap/shoyu-airdrop.git",
   "author": "LevX <team@levx.io>",
+  "files": [
+    "abis",
+    "contracts",
+    "typechain"
+  ],
   "license": "MIT",
   "scripts": {
-    "build": "hardhat compile",
+    "build": "rimraf abis artifacts cache typechain && hardhat compile",
     "console": "hardhat console",
     "hardhat:deploy": "hardhat --network hardhat deploy",
     "mainnet:deploy": "hardhat --network mainnet deploy",
@@ -77,6 +82,7 @@
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.18",
     "readline-sync": "^1.4.10",
+    "rimraf": "^3.0.2",
     "solidity-coverage": "^0.7.0",
     "ts-generator": "^0.1.0",
     "ts-jest": "^26.5.1",
