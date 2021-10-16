@@ -4,9 +4,10 @@ pragma solidity =0.8.3;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@shoyunft/contracts/contracts/interfaces/INFT1155.sol";
+import "@shoyunft/contracts/contracts/interfaces/INFTLockable.sol";
 import "./MerkleProof.sol";
 
-contract NFT1155AirdropV0 is Ownable, MerkleProof {
+contract NFT1155AirdropV1 is Ownable, MerkleProof {
     address public immutable nftContract;
     mapping(uint256 => bytes32) public merkleRoots;
     mapping(bytes32 => mapping(address => bool)) public claimed;
@@ -22,6 +23,8 @@ contract NFT1155AirdropV0 is Ownable, MerkleProof {
         nftContract = _nftContract;
         if (merkleRoot != bytes32("")) {
             merkleRoots[tokenId] = merkleRoot;
+
+            emit AddMerkleRoot(merkleRoot, tokenId);
         }
     }
 
@@ -39,6 +42,10 @@ contract NFT1155AirdropV0 is Ownable, MerkleProof {
 
     function setBaseURI(string memory baseURI) external onlyOwner {
         INFT1155(nftContract).setBaseURI(baseURI);
+    }
+
+    function setLocked(bool locked) external onlyOwner {
+        INFTLockable(nftContract).setLocked(locked);
     }
 
     function mintBatch(
@@ -61,9 +68,14 @@ contract NFT1155AirdropV0 is Ownable, MerkleProof {
         emit AddMerkleRoot(merkleRoot, tokenId);
     }
 
-    function claim(bytes32 merkleRoot, uint256 tokenId) external {
+    function claim(
+        bytes32 merkleRoot,
+        uint256 tokenId,
+        bytes32[] calldata merkleProof
+    ) external {
         require(merkleRoots[tokenId] == merkleRoot, "SHOYU: INVALID_ROOT");
         require(!claimed[merkleRoot][msg.sender], "SHOYU: FORBIDDEN");
+        require(verify(merkleRoot, keccak256(abi.encodePacked(msg.sender)), merkleProof), "SHOYU: INVALID_PROOF");
 
         claimed[merkleRoot][msg.sender] = true;
         INFT1155(nftContract).mint(msg.sender, tokenId, 1, "");

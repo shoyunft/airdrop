@@ -6,7 +6,7 @@ async function main() {
     const merkleRoot = readlineSync.question("Merkle Root: ");
     const tokenId = readlineSync.question("Token ID: ");
 
-    const NFT1155Airdrop = await ethers.getContractFactory("NFT1155AirdropV0");
+    const NFT1155Airdrop = await ethers.getContractFactory("NFT1155AirdropV1");
     const airdrop = await NFT1155Airdrop.deploy(contract, merkleRoot, tokenId);
     await airdrop.deployed();
 

@@ -1354,10 +1354,10 @@
     "@sentry/types" "5.30.0"
     tslib "^1.9.3"
 
-"@shoyunft/contracts@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@shoyunft/contracts/-/contracts-1.0.2.tgz#9feefefd4ccf6b334131e6eb6191e10bb2406813"
-  integrity sha512-sAFwXTJOZbRq/WX+PvOgXybaPl7z1QzLnEXRG3BSYITI/oAnyRNNWO2SJvxg7HhM+8nk6IdR/DcK4TGGl82bdg==
+"@shoyunft/contracts@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@shoyunft/contracts/-/contracts-1.0.3.tgz#416337950ebc620087a9e71b079e26c78cb03d38"
+  integrity sha512-VyTyGMf1GP1X9j0+hr0Z3oPfF00+7+Pm6OWcvCG+OihmtHtIS26yppHCjgmxu6hEK/91E5Ox6bm+HsWPHE9Smg==
   dependencies:
     "@openzeppelin/contracts" "^4.1.0"
 

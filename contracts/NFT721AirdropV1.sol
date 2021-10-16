@@ -4,9 +4,10 @@ pragma solidity =0.8.3;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@shoyunft/contracts/contracts/interfaces/INFT721.sol";
+import "@shoyunft/contracts/contracts/interfaces/INFTLockable.sol";
 import "./MerkleProof.sol";
 
-contract NFT721AirdropV0 is Ownable, MerkleProof {
+contract NFT721AirdropV1 is Ownable, MerkleProof {
     struct TokenIdRange {
         uint256 from;
         uint256 length;
@@ -30,6 +31,8 @@ contract NFT721AirdropV0 is Ownable, MerkleProof {
         if (merkleRoot != bytes32("")) {
             tokenIdRanges[merkleRoot].from = fromTokenId;
             tokenIdRanges[merkleRoot].length = length;
+
+            emit AddMerkleRoot(merkleRoot, fromTokenId, length);
         }
     }
 
@@ -65,6 +68,10 @@ contract NFT721AirdropV0 is Ownable, MerkleProof {
         INFT721(nftContract).burnBatch(tokenIds);
     }
 
+    function setLocked(bool locked) external onlyOwner {
+        INFTLockable(nftContract).setLocked(locked);
+    }
+
     function addMerkleRoot(
         bytes32 merkleRoot,
         uint256 fromTokenId,
@@ -77,11 +84,12 @@ contract NFT721AirdropV0 is Ownable, MerkleProof {
         emit AddMerkleRoot(merkleRoot, fromTokenId, length);
     }
 
-    function claim(bytes32 merkleRoot) external {
+    function claim(bytes32 merkleRoot, bytes32[] calldata merkleProof) external {
         TokenIdRange storage range = tokenIdRanges[merkleRoot];
         uint256 length = range.length;
         require(length > 0, "SHOYU: INVALID_ROOT");
         require(!claimed[merkleRoot][msg.sender], "SHOYU: FORBIDDEN");
+        require(verify(merkleRoot, keccak256(abi.encodePacked(msg.sender)), merkleProof), "SHOYU: INVALID_PROOF");
 
         uint256 tokens = tokensClaimed[merkleRoot];
         require(tokens < length, "SHOYU: ALL_CLAIMED");
