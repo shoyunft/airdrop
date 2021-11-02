@@ -19,7 +19,7 @@ abstract contract BaseNFT721Airdrop is Ownable, MerkleProof {
     mapping(bytes32 => mapping(bytes32 => bool)) public claimed;
 
     event AddMerkleRoot(bytes32 indexed merkleRoot, uint256 indexed fromTokenId, uint256 length);
-    event Claim(bytes32 indexed merkleRoot, uint256 indexed tokenId, address indexed account);
+    event Claim(bytes32 indexed merkleRoot, bytes32 indexed hash, uint256 tokenId, address indexed account);
 
     constructor(
         address _nftContract,
@@ -109,7 +109,7 @@ abstract contract BaseNFT721Airdrop is Ownable, MerkleProof {
         tokensClaimed[merkleRoot] += 1;
         INFT721(nftContract).mint(msg.sender, tokenId, "");
 
-        emit Claim(merkleRoot, tokenId, msg.sender);
+        emit Claim(merkleRoot, _hash, tokenId, msg.sender);
     }
 
     function hash(bytes memory data) public virtual view returns (bytes32);
