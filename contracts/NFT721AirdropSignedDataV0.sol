@@ -15,7 +15,7 @@ contract NFT721AirdropSignedDataV0 is BaseNFT721Airdrop {
         // Empty
     }
 
-    function hash(bytes memory data) public override view returns (bytes32) {
+    function hash(bytes memory data) public override pure returns (bytes32) {
         return keccak256(data);
     }
 
