@@ -28,6 +28,10 @@ contract NFT1155AirdropV1 is Ownable, MerkleProof {
         }
     }
 
+    function transferOwnershipOfNFTContract(address newOwner) external onlyOwner {
+        INFT1155(nftContract).transferOwnership(newOwner);
+    }
+
     function setRoyaltyFeeRecipient(address _royaltyFeeRecipient) external onlyOwner {
         INFT1155(nftContract).setRoyaltyFeeRecipient(_royaltyFeeRecipient);
     }

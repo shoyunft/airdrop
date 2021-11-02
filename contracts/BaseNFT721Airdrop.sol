@@ -36,6 +36,10 @@ abstract contract BaseNFT721Airdrop is Ownable, MerkleProof {
         }
     }
 
+    function transferOwnershipOfNFTContract(address newOwner) external onlyOwner {
+        INFT721(nftContract).transferOwnership(newOwner);
+    }
+
     function setRoyaltyFeeRecipient(address _royaltyFeeRecipient) external onlyOwner {
         INFT721(nftContract).setRoyaltyFeeRecipient(_royaltyFeeRecipient);
     }
