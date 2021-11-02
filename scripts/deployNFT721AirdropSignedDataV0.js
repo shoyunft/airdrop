@@ -7,11 +7,11 @@ async function main() {
     const fromTokenId = readlineSync.question("From Token ID: ");
     const length = readlineSync.question("Length: ");
 
-    const NFT721Airdrop = await ethers.getContractFactory("NFT721AirdropV1");
+    const NFT721Airdrop = await ethers.getContractFactory("NFT721AirdropSignedDataV0");
     const airdrop = await NFT721Airdrop.deploy(contract, merkleRoot, fromTokenId, length);
     await airdrop.deployed();
 
-    console.log("NFT721Airdrop deployed to:", airdrop.address);
+    console.log("NFT721AirdropSignedData deployed to:", airdrop.address);
 }
 
 main()
